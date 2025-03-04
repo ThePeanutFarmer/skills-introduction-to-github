@@ -1,0 +1,19 @@
+#include <BLEDevice.h>
+
+void setup() {
+  Serial.begin(115200);
+  BLEDevice::init("");
+  BLEScan* pBLEScan = BLEDevice::getScan();
+  pBLEScan->setActiveScan(true); // Set to active scanning
+}
+
+void loop() {
+  BLEScanResults foundDevices = pBLEScan->start(5); // Scan for 5 seconds
+  for (int i = 0; i < foundDevices.getCount(); i++) {
+    BLEAdvertisedDevice device = foundDevices.getDevice(i);
+    if (device.haveRSSI()) {
+      Serial.printf("Device: %s RSSI: %d\n", device.getAddress().toString().c_str(), device.getRSSI());
+    }
+  }
+  delay(2000);
+}
